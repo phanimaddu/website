@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/phanimaddu/website.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t carwebsite .'
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh '''
+                docker stop carwebsite-container || true
+                docker rm carwebsite-container || true
+
+                docker run -d \
+                --name carwebsite-container \
+                -p 80:80 \
+                carwebsite
+                '''
+            }
+        }
+    }
+}
