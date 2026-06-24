@@ -1,32 +1,7 @@
-pipeline {
-    agent any
+FROM nginx:alpine
 
-    stages {
+COPY . /usr/share/nginx/html
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/phanimaddu/website.git'
-            }
-        }
+EXPOSE 80
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t carwebsite .'
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                sh '''
-                docker stop carwebsite-container || true
-                docker rm carwebsite-container || true
-
-                docker run -d \
-                --name carwebsite-container \
-                -p 80:80 \
-                carwebsite
-                '''
-            }
-        }
-    }
-}
+CMD ["nginx", "-g", "daemon off;"]
