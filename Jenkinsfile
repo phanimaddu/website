@@ -18,14 +18,12 @@ pipeline {
                 '''
             }
         }
- 
     }
  
     post {
         success {
             echo 'Website deployed successfully'
         }
- 
         failure {
             echo 'Deployment failed'
         }
